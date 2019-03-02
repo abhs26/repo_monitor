@@ -21,6 +21,27 @@ public class FileInfo {
         this.file_modified_datetime = file_modified_date;
     }
 
+    // Overriding equals() to compare two FileInfo objects 
+    @Override
+    public boolean equals(Object o) { 
+  
+        // If the object is compared with itself then return true   
+        if (o == this) { 
+            return true; 
+        } 
+  
+        /* Check if o is an instance of FileInfo or not 
+          "null instanceof [type]" also returns false */
+        if (!(o instanceof FileInfo)) { 
+            return false; 
+        } 
+        // typecast o to FileInfo so that we can compare data members  
+        FileInfo c = (FileInfo) o; 
+        // Compare the data members and return accordingly  
+        return this.file_name.equals(c.file_name);
+    } 
+
+
     
     public String getFile_create_date()
     {

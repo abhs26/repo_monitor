@@ -35,12 +35,21 @@ public class FileWriter {
         StartDocument startDocument = eventFactory.createStartDocument();
         eventWriter.add(startDocument);
 
+
+        StartElement configRootElement = eventFactory.createStartElement("",
+        "", "dir_info");
+        eventWriter.add(configRootElement);
         for(int i =0 ; i< file_list.size(); i++)
         {
         // create config open tag
         StartElement configStartElement = eventFactory.createStartElement("",
                 "", "file_info");
+
+        XMLEvent eventd = eventFactory.createAttribute("name", file_list.get(i).getFile_name());
+           
+                
         eventWriter.add(configStartElement);
+        eventWriter.add(eventd);
         eventWriter.add(end);
         // Write the different nodes
         createNode(eventWriter, "name", file_list.get(i).getFile_name());
@@ -53,6 +62,8 @@ public class FileWriter {
         eventWriter.add(eventFactory.createEndElement("", "", "file_info"));
         eventWriter.add(end);
         }
+
+        eventWriter.add(eventFactory.createEndElement("","", "dir_info"));
         eventWriter.add(eventFactory.createEndDocument());
         eventWriter.close();
     }

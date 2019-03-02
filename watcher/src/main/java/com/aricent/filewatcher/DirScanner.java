@@ -1,5 +1,6 @@
 package com.aricent.filewatcher;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -12,6 +13,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
+import java.util.List;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import com.aricent.filewatcher.FileWriter;
@@ -22,10 +24,12 @@ public class DirScanner {
 ArrayList<FileInfo> file_list = new ArrayList<FileInfo>();
 
 FileWriter file_writer;
+String file_name;
+
     private static String getFileExtension(String fileName) {
         if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
         return fileName.substring(fileName.lastIndexOf(".")+1);
-        else return "";
+        else return "default";
     }
 
     DirScanner()
@@ -35,28 +39,28 @@ FileWriter file_writer;
             "yyyy-MM-dd HH:mm:ss.SSS");// dd/MM/yyyy
         Date now = new Date();
         String strDate = sdfDate.format(now);
-        String file_name = "settings_"+strDate.replace(":","_").replace(".","_")+".xml";
+        String file_name = "settings_"+strDate.replace(":","_").replace(".","_").replace(" ","_")+".xml";
         file_writer.setFile(file_name);
+        this.file_name = file_name;
 
     }
+
+    public String get_file_name()
+    {
+        return this.file_name;
+    }
+
+
+
 
           
 
 public void ScanDir(String filePath) {
-
-
-
-     
     FileVisitor<Path> simpleFileVisitor = new SimpleFileVisitor<Path>() {
       @Override
       public FileVisitResult preVisitDirectory(Path dir,BasicFileAttributes attrs)
           throws IOException {
-
-
-        System.out.println("-------------------------------------");
-        System.out.println("DIRECTORY NAME:"+ dir.getFileName() 
-                           + "LOCATION:"+ dir.toFile().getPath());
-        System.out.println("-------------------------------------");
+        System.out.println("DIRECTORY NAME:"+ dir.getFileName()); 
         return FileVisitResult.CONTINUE;
       }
        
@@ -71,13 +75,10 @@ try{
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
             String createTime = sdf.format(fileAttributes.creationTime().toMillis());
             String modifiedTime = sdf.format(visitedFile.toFile().lastModified());
-
-            System.out.println(createTime);
-            System.out.println(modifiedTime);
-            FileInfo file_info = new FileInfo(visitedFile.getFileName().toString(),visitedFile.toString(),mimeType,size,createTime,modifiedTime);
-            
+            FileInfo file_info = new FileInfo(visitedFile.getFileName().toString(),
+            visitedFile.toString(),mimeType,size,createTime,modifiedTime);
+            System.out.println(file_info.toString());
             file_list.add(file_info);
-        System.out.println("FILE NAME: "+ file_info.toString());
         return FileVisitResult.CONTINUE;
 }
 catch(Exception ex){
